@@ -10,7 +10,8 @@ export function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) navigate("/");
+    // PROD
+    // if (user) navigate("/");
   }, [user]);
 
   function logIn() {
@@ -19,13 +20,14 @@ export function Login() {
   }
 
   return (
-    <Centered className="bg-[#35354d]">
-      <div className="flex items-center justify-center flex-col h-full flex-grow z-10">
-        <div className="flex items-center justify-center w-full rounded-3xl bg-bg-half py-2 px-8">
+    <Centered className="bg-background" start>
+      <div className="flex items-center justify-start flex-col w-fit h-full">
+        <div className="h-20 flex-shrink-0" />
+        <div className="flex items-center justify-center w-full rounded-3xl bg-half mx-4">
           <img src="/images/intro-light.png" alt="Introduction" />
         </div>
-        <div className="h-8 flex-shrink-0" />
-        <div className="flex items-center justify-center flex-col bg-white rounded-3xl w-[35rem] h-[12rem]">
+        <div className="h-12 flex-shrink-0" />
+        <div className="flex items-center justify-center flex-col bg-white rounded-3xl w-full h-fit py-8 bg-surface">
           <p className="text-3xl font-bold">Log in</p>
           <div className="h-6 flex-shrink-0" />
           <button
@@ -38,7 +40,6 @@ export function Login() {
           </button>
         </div>
       </div>
-      <div className="h-full flex-grow" />
     </Centered>
   );
 }

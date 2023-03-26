@@ -8,7 +8,8 @@ export function Guarded(props: LayoutProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user === null) navigate("/login");
+    // PROD
+    // if (user === null) navigate("/login");
   }, [user]);
 
   return <>{props.children}</>;
