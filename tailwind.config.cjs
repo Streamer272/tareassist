@@ -6,6 +6,12 @@ module.exports = {
       fontFamily: {
         dm: "DM Sans",
       },
+      backgroundImage: {
+        sandwich: "url('/images/sandwich.png')",
+      },
+      backgroundColor: {
+        "bg-half": "rgba(0, 0, 0, 0.5)",
+      },
     },
   },
   plugins: [],
