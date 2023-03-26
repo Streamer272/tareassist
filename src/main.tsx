@@ -4,6 +4,7 @@ import { App } from "./App";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { NotFound } from "./pages/NotFound";
 import { Landing } from "./pages/Landing";
+import "./output.css";
 
 const router = createBrowserRouter([
   {

@@ -1,3 +1,9 @@
+import { Centered } from "../layouts/Centered";
+
 export function Landing() {
-  return <h1>Landing</h1>;
+  return (
+    <Centered>
+      <h1 className="font-dm">Landing</h1>
+    </Centered>
+  );
 }
