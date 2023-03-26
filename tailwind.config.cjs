@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        dm: "DM Sans",
+        poppins: "Poppins",
       },
       backgroundImage: {
         sandwich: "url('/images/sandwich.png')",

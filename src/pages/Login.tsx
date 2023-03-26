@@ -19,12 +19,10 @@ export function Login() {
   }
 
   return (
-    <Centered>
-      <div className="fixed top-0 left-0 w-screen h-screen z-0 bg-sandwich bg-cover bg-no-repeat bg-center blur-md" />
-
+    <Centered className="bg-[#35354d]">
       <div className="flex items-center justify-center flex-col h-full flex-grow z-10">
         <div className="flex items-center justify-center w-full rounded-3xl bg-bg-half py-2 px-8">
-          <img src="/images/intro.png" alt="Introduction" />
+          <img src="/images/intro-light.png" alt="Introduction" />
         </div>
         <div className="h-8 flex-shrink-0" />
         <div className="flex items-center justify-center flex-col bg-white rounded-3xl w-[35rem] h-[12rem]">

@@ -9,7 +9,7 @@ export function App(props: ChildrenProps) {
     <MantineProvider
       withGlobalStyles
       withNormalizeCSS
-      theme={{ fontFamily: "DM Sans" }}
+      theme={{ fontFamily: "Poppins" }}
     >
       {props.children}
     </MantineProvider>

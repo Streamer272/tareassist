@@ -1,9 +1,12 @@
 import { Centered } from "../layouts/Centered";
+import { Guarded } from "../layouts/Guarded";
 
 export function Landing() {
   return (
-    <Centered>
-      <h1>Landing</h1>
-    </Centered>
+    <Guarded>
+      <Centered>
+        <h1>Landing</h1>
+      </Centered>
+    </Guarded>
   );
 }

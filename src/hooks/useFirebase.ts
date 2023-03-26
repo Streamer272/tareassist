@@ -37,7 +37,7 @@ export function useFirebase() {
 }
 
 export function useUser() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null | undefined>(undefined);
   const { auth } = useFirebase();
 
   onAuthStateChanged(auth, (user) => {
