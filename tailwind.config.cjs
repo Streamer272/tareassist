@@ -3,10 +3,11 @@ module.exports = {
   content: ["./src/**/*.tsx"],
   theme: {
     colors: {
-      transparent: "transparent",
+      "on-background": "#e0e0e0",
       background: "#35354d",
       surface: "#eeeeee",
-      "surface-variant": "#d9d9d9"
+      "surface-variant": "#d9d9d9",
+      transparent: "transparent",
     },
     extend: {
       fontFamily: {
