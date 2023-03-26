@@ -3,10 +3,12 @@ import ReactDOM from "react-dom/client";
 import { App } from "./App";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { NotFound } from "./pages/NotFound";
-import { Landing } from "./pages/Add";
+import { Add } from "./pages/Add";
 import { Login } from "./pages/Login";
 import { Home } from "./pages/Home";
 import "./output.css";
+import { CreateSchool } from "./pages/Create/School";
+import { CreateClass } from "./pages/Create/Class";
 
 const router = createBrowserRouter([
   {
@@ -15,11 +17,19 @@ const router = createBrowserRouter([
   },
   {
     path: "/add",
-    element: <Landing />,
+    element: <Add />,
   },
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/create/school",
+    element: <CreateSchool />,
+  },
+  {
+    path: "/create/class",
+    element: <CreateClass />,
   },
   {
     path: "*",

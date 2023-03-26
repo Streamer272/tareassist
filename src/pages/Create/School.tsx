@@ -1,36 +1,11 @@
 import { useEffect, useState } from "react";
-import { useAllClasses, useClasses } from "../hooks/useClasses";
-import { Centered } from "../layouts/Centered";
-import { Guarded } from "../layouts/Guarded";
 import { Button, NativeSelect } from "@mantine/core";
-import { useAllSchools } from "../hooks/useSchools";
 import { Link, useNavigate } from "react-router-dom";
+import { Guarded } from "../../layouts/Guarded";
+import { Centered } from "../../layouts/Centered";
 
-export function Add() {
-  const [school, setSchool] = useState<string | undefined>(undefined);
-  const [class_, setClass] = useState<string | undefined>(undefined);
-  const { loadClasses, addClass } = useClasses();
-  const { schools, loadSchools } = useAllSchools();
-  const { classes, loadClasses: loadAllClasses } = useAllClasses();
-  const navigate = useNavigate();
-
-  function add(event: any) {
-    event.preventDefault();
-    const actualClass = classes.find((class2) => class2.name === class_);
-    if (actualClass) addClass(actualClass);
-    navigate("/");
-  }
-
-  useEffect(() => {
-    loadSchools();
-    loadClasses();
-    loadAllClasses();
-  }, []);
-
-  useEffect(() => {
-    if (schools.length > 0) setSchool(schools[0].name);
-    if (classes.length > 0) setClass(classes[0].name);
-  }, [schools, classes]);
+export function CreateSchool() {
+  function add() {}
 
   return (
     <Guarded>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useFirebase } from "./useFirebase";
-import { getDocs } from "firebase/firestore";
+import { addDoc, getDocs } from "firebase/firestore";
 
 export type School = {
   id: string;
@@ -27,4 +27,9 @@ export function useAllSchools() {
   }
 
   return { schools, loadSchools };
+}
+
+export function createSchool(name: string) {
+  const { schoolsCollection } = useFirebase();
+  addDoc(schoolsCollection, { name: name });
 }

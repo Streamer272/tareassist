@@ -4,11 +4,14 @@ import { Guarded } from "../layouts/Guarded";
 import { useFirebase } from "../hooks/useFirebase";
 import { signOut } from "firebase/auth";
 import { useClasses } from "../hooks/useClasses";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export function Home() {
   const { auth } = useFirebase();
   const { classes, loadClasses } = useClasses();
+  const [selectedClass, setSelectedClass] = useState<number | undefined>(
+    undefined
+  );
 
   function logOut() {
     signOut(auth);
@@ -33,9 +36,10 @@ export function Home() {
               Classes
             </p>
             <div className="h-px flex-shrink-0" />
-            {classes.map((class_) => (
+            {classes.map((class_, index) => (
               <button
                 key={class_.id}
+                onClick={() => setSelectedClass(index)}
                 className="flex items-center justify-center w-fit ml-6"
               >
                 <p className="flex items-center justify-center text-3xl rounded-full bg-surface w-12 h-12">
@@ -49,7 +53,7 @@ export function Home() {
           <div className="flex items-center justify-center flex-shrink-0 w-full h-fit">
             <div className="w-4 flex-shrink-0" />
             <Link
-              to="/"
+              to="/add"
               className="p-2 flex-shrink-0 rounded-full bg-surface-variant"
             >
               <span className="material-symbols-outlined flex items-center justify-center text-4xl w-10 h-10">
@@ -70,9 +74,12 @@ export function Home() {
           </div>
           <div className="h-4 flex-shrink-0" />
         </div>
-        <div className="w-full h-screen bg-surface">
-          <p>hello world!</p>
-        </div>
+
+        {selectedClass !== undefined && (
+          <div className="w-[20vw] h-screen bg-background">xx</div>
+        )}
+
+        <div className="w-full h-screen bg-surface"></div>
       </Centered>
     </Guarded>
   );

@@ -1,5 +1,5 @@
 export type LayoutProps = {
-  children: JSX.Element | JSX.Element[];
+  children: any | any[];
   className?: string;
   row?: boolean;
   start?: boolean;
