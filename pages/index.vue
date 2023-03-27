@@ -2,7 +2,7 @@
   <Guarded>
     <Centered row>
       <div
-        class="flex items-center justify-center flex-col w-[20vw] h-screen bg-background"
+        class="flex items-center justify-center flex-col flex-shrink-0 w-[20vw] h-screen bg-background"
       >
         <img
           src="/images/intro-light.png"
@@ -59,11 +59,19 @@
         <div class="h-4 flex-shrink-0" />
       </div>
 
+      <div class="w-1 h-screen bg-surface" />
+
       <div
         v-if="selectedClass !== undefined"
-        class="w-[20vw] h-screen bg-background"
+        class="flex items-start justify-center flex-col flex-shrink-0 w-[20vw] h-screen bg-background gap-y-2"
       >
-        xx
+        <div class="h-2 flex-shrink-0" />
+        <div v-for="hw in homework" class="ml-4">
+          <p class="text-on-background text-xl">
+            {{ hw.name }} (due on {{ dayjs(hw.due.toMillis()).format("D MMM") }})
+          </p>
+        </div>
+        <div class="flex-grow" />
       </div>
 
       <div class="w-full h-screen bg-surface"></div>
@@ -72,12 +80,58 @@
 </template>
 
 <script lang="ts" setup>
+import {
+  DocumentReference,
+  Timestamp,
+  collection,
+  doc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { signOut } from "firebase/auth";
+import * as dayjs from "dayjs";
 
 const { classes } = useClasses();
 const selectedClass = ref<number | undefined>(undefined);
+const homework = ref<Homework[]>([]);
 
 function logOut() {
   signOut(useFirebaseAuth());
 }
+
+type Homework = {
+  id: string;
+  name: string;
+  assigned: Timestamp;
+  due: Timestamp;
+  class: DocumentReference;
+};
+
+watchEffect(async () => {
+  if (classes.value.length === 0 || selectedClass.value === undefined) return;
+
+  const class_ = classes.value[selectedClass.value];
+  const docs = await getDocs(
+    query(
+      collection(useFirebaseDb(), "homework"),
+      where("class", "==", doc(useFirebaseDb(), "classes", class_.id))
+    )
+  );
+
+  const array: Homework[] = [];
+  docs.forEach((document) => {
+    console.log(document.data().assigned);
+    array.push({
+      id: document.id,
+      name: document.data().name,
+      assigned: document.data().assigned,
+      due: document.data().due,
+      class: document.data().class,
+    });
+  });
+  homework.value = array.sort(
+    (a, b) => b.assigned.toMillis() - a.assigned.toMillis()
+  );
+});
 </script>

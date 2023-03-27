@@ -12,6 +12,7 @@
     "nuxt": "^3.3.2"
   },
   "dependencies": {
+    "dayjs": "^1.11.7",
     "firebase": "^9.18.0"
   }
 }
