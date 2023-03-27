@@ -1,6 +1,10 @@
-import { DocumentReference, doc, getDoc, getDocs } from "firebase/firestore";
-import { useState } from "react";
-import { useFirebase } from "./useFirebase";
+import {
+  DocumentReference,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+} from "firebase/firestore";
 
 export type Class = {
   id: string;
@@ -10,15 +14,14 @@ export type Class = {
 };
 
 export function useClasses() {
-  const [classes, setClasses] = useState<Class[]>([]);
-  const { classesCollection } = useFirebase();
+  const classes = useState<Class[]>("classes", () => []);
 
-  async function loadClasses() {
+  onMounted(async () => {
     const local = localStorage.getItem("classes");
     if (local) {
       const array: Class[] = [];
       for (const class_ of JSON.parse(local)) {
-        const document = await getDoc(doc(classesCollection, class_));
+        const document = await getDoc(doc(useFirebaseDb(), "classes", class_));
         const data = document.data();
         if (!data || !document.exists()) continue;
 
@@ -29,29 +32,28 @@ export function useClasses() {
           webhook: data.webhook,
         });
       }
-      setClasses(array);
+      classes.value = array;
     } else {
       localStorage.setItem("classes", JSON.stringify([]));
     }
-  }
+  });
 
   function addClass(class_: Class) {
-    const array = [...classes, class_];
+    const array = [...classes.value, class_];
     localStorage.setItem(
       "classes",
       JSON.stringify(array.map((class_) => class_.id))
     );
   }
 
-  return { classes, loadClasses, addClass };
+  return { classes, addClass };
 }
 
 export function useAllClasses() {
-  const [classes, setClasses] = useState<Class[]>([]);
-  const { classesCollection } = useFirebase();
+  const classes = useState<Class[]>("classes", () => []);
 
-  async function loadClasses() {
-    const documents = await getDocs(classesCollection);
+  onMounted(async () => {
+    const documents = await getDocs(collection(useFirebaseDb(), "classes"));
     const array: Class[] = [];
     for (const document of documents.docs) {
       const data = document.data();
@@ -64,8 +66,8 @@ export function useAllClasses() {
         webhook: data.webhook,
       });
     }
-    setClasses(array);
-  }
+    classes.value = array;
+  });
 
-  return { classes, loadClasses };
+  return classes;
 }

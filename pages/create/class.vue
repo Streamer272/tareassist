@@ -1,0 +1,1 @@
+<template>create class</template>
