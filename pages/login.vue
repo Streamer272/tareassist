@@ -1,5 +1,5 @@
 <template>
-  <Centered class="bg-background" start row>
+  <Centered row bg>
     <div class="flex items-center justify-start flex-col w-fit h-full">
       <div class="h-20 flex-shrink-0" />
       <div
@@ -29,6 +29,8 @@
 <script lang="ts" setup>
 import { GoogleAuthProvider, signInWithPopup } from "@firebase/auth";
 
+const user = useUser();
+
 function logIn() {
   const provider = new GoogleAuthProvider();
   signInWithPopup(useFirebaseAuth(), provider);
@@ -36,6 +38,6 @@ function logIn() {
 
 watchEffect(() => {
   // PROD
-  //   if (user) navigateTo("/");
+  if (user.value) navigateTo("/");
 });
 </script>

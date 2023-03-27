@@ -40,6 +40,7 @@ export function useClasses() {
 
   function addClass(class_: Class) {
     const array = [...classes.value, class_];
+    classes.value = array;
     localStorage.setItem(
       "classes",
       JSON.stringify(array.map((class_) => class_.id))
@@ -50,7 +51,7 @@ export function useClasses() {
 }
 
 export function useAllClasses() {
-  const classes = useState<Class[]>("classes", () => []);
+  const classes = useState<Class[]>("all-classes", () => []);
 
   onMounted(async () => {
     const documents = await getDocs(collection(useFirebaseDb(), "classes"));
