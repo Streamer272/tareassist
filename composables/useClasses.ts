@@ -1,5 +1,6 @@
 import {
   DocumentReference,
+  addDoc,
   collection,
   doc,
   getDoc,
@@ -71,4 +72,12 @@ export function useAllClasses() {
   });
 
   return classes;
+}
+
+export function useCreateClass(name: string, school: DocumentReference) {
+  addDoc(collection(useFirebaseDb(), "classes"), {
+    name: name,
+    school: school,
+    webhook: "",
+  });
 }

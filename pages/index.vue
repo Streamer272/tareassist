@@ -66,15 +66,46 @@
         class="flex items-start justify-center flex-col flex-shrink-0 w-[20vw] h-screen bg-background gap-y-2"
       >
         <div class="h-2 flex-shrink-0" />
-        <div v-for="hw in homework" class="ml-4">
+        <button
+          v-for="(hw, index) in homework"
+          @click="() => (selectedHomework = index)"
+          class="ml-4"
+        >
           <p class="text-on-background text-xl">
-            {{ hw.name }} (due on {{ dayjs(hw.due.toMillis()).format("D MMM") }})
+            {{ hw.name }} (due on
+            {{ dayjs(hw.due.toMillis()).format("D MMM") }})
           </p>
-        </div>
+        </button>
         <div class="flex-grow" />
       </div>
 
-      <div class="w-full h-screen bg-surface"></div>
+      <div
+        class="flex items-start justify-center flex-col w-full h-screen bg-surface gap-y-3"
+      >
+        <div class="h-4" />
+        <div
+          v-for="submission in submissions"
+          class="rounded-xl bg-surface-variant py-2 px-4 ml-6"
+        >
+          <p class="flex items-center justify-center w-fit">
+            {{ submission.text }} -
+            <div class="w-1 flex-shrink-0" />
+            <img
+              :src="submission.user.pfp"
+              alt="Profile picture"
+              class="w-5 h-5 rounded-full"
+            />
+            <div class="w-1 flex-shrink-0" />
+            {{ submission.user.name }}
+          </p>
+          <img
+            v-for="image in submission.images"
+            :src="image"
+            alt="Submission"
+          />
+        </div>
+        <div class="flex-grow" />
+      </div>
     </Centered>
   </Guarded>
 </template>
@@ -89,12 +120,14 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { signOut } from "firebase/auth";
+import { User, signOut } from "firebase/auth";
 import * as dayjs from "dayjs";
 
 const { classes } = useClasses();
 const selectedClass = ref<number | undefined>(undefined);
 const homework = ref<Homework[]>([]);
+const selectedHomework = ref<number | undefined>(undefined);
+const submissions = ref<Submission[]>([]);
 
 function logOut() {
   signOut(useFirebaseAuth());
@@ -107,6 +140,48 @@ type Homework = {
   due: Timestamp;
   class: DocumentReference;
 };
+
+type Submission = {
+  id: string;
+  text: string;
+  images: string[];
+  homework: DocumentReference;
+  user: {
+    name: string;
+    pfp: string;
+  };
+};
+
+watchEffect(() => {
+  if (homework.value) selectedHomework.value = undefined;
+});
+
+watchEffect(async () => {
+  if (homework.value.length === 0 || selectedHomework.value === undefined)
+    return;
+
+  const hw = homework.value[selectedHomework.value];
+  const docs = await getDocs(
+    query(
+      collection(useFirebaseDb(), "submissions"),
+      where("homework", "==", doc(useFirebaseDb(), "homework", hw.id))
+    )
+  );
+
+  const array: Submission[] = [];
+  docs.forEach((document) => {
+    const user = ref<User | undefined>(undefined);
+
+    array.push({
+      id: document.id,
+      text: document.data().text,
+      images: document.data().images,
+      homework: document.data().homework,
+      user: document.data().user,
+    });
+  });
+  submissions.value = array;
+});
 
 watchEffect(async () => {
   if (classes.value.length === 0 || selectedClass.value === undefined) return;
