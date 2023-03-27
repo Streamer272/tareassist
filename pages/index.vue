@@ -77,6 +77,38 @@
           </p>
         </button>
         <div class="flex-grow" />
+        <form
+          @submit="createHomework"
+          class="flex items-center justify-center flex-col w-full"
+        >
+          <input
+            v-model="newHwName"
+            placeholder="Homework name"
+            class="rounded-full py-2 px-4 flex-shrink-0"
+          />
+          <div class="h-2 flex-shrink-0" />
+          <input
+            v-model="newHwDate"
+            placeholder="Homework date"
+            type="date"
+            class="rounded-full h-fit py-2 px-4 flex-shrink-0"
+          />
+          <div class="h-2 flex-shrink-0" />
+          <button
+            type="submit"
+            :disabled="!newHwName || !newHwDate"
+            :class="`flex items-center justify-center rounded-full bg-surface h-full p-1 aspect-square ${
+              !newHwName || !newHwDate ? 'opacity-50' : ''
+            }`"
+          >
+            <span
+              class="material-symbols-outlined flex items-center justify-center text-3xl"
+            >
+              add
+            </span>
+          </button>
+        </form>
+        <div class="h-2 flex-shrink-0" />
       </div>
 
       <div
@@ -168,9 +200,53 @@ const selectedHomework = ref<number | undefined>(undefined);
 const submissions = ref<Submission[]>([]);
 const fileInputRef = ref<HTMLInputElement | undefined>(undefined);
 const text = ref<string>("");
+const newHwName = ref<string>("");
+const newHwDate = ref<string>("");
+
+type Homework = {
+  id: string;
+  name: string;
+  assigned: Timestamp;
+  due: Timestamp;
+  class: DocumentReference;
+};
+
+type Submission = {
+  id: string;
+  text: string;
+  images: string[];
+  homework: DocumentReference;
+  user: {
+    name: string;
+    pfp: string;
+  };
+};
 
 function logOut() {
   signOut(useFirebaseAuth());
+}
+
+async function createHomework(event: Event) {
+  event.preventDefault();
+
+  if (!newHwName.value) return;
+
+  const due = new Date(newHwDate.value);
+  await addDoc(collection(useFirebaseDb(), "homework"), {
+    name: newHwName.value,
+    assigned: Timestamp.now(),
+    due: Timestamp.fromDate(due),
+    class: doc(
+      useFirebaseDb(),
+      "classes",
+      classes.value[selectedClass.value!!].id
+    ),
+  });
+
+  newHwName.value = "";
+  const previous = selectedClass.value;
+  selectedClass.value = undefined;
+  selectedClass.value = previous;
 }
 
 async function upload(event: Event) {
@@ -205,29 +281,8 @@ async function upload(event: Event) {
   text.value = "";
   const previous = selectedHomework.value;
   selectedHomework.value = undefined;
-  setTimeout(() => {
-    selectedHomework.value = previous;
-  }, 50);
+  selectedHomework.value = previous;
 }
-
-type Homework = {
-  id: string;
-  name: string;
-  assigned: Timestamp;
-  due: Timestamp;
-  class: DocumentReference;
-};
-
-type Submission = {
-  id: string;
-  text: string;
-  images: string[];
-  homework: DocumentReference;
-  user: {
-    name: string;
-    pfp: string;
-  };
-};
 
 watchEffect(() => {
   if (homework.value) selectedHomework.value = undefined;
